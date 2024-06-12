@@ -13,12 +13,13 @@
       <%- include('_navigation.ejs') %>
         <% if (loggedIn) { %>
           <a class="btn btn-outline-secondary"
-          herf="<%= `/users/${currentUser._id}`%>">1</a>
+          href="<%= `/users/${currentUser._id}`%>">Profile</a>
           <span>Logged in as</span>
         <% } else { %>
           <a class="btn btn-outline-secondary"
-          herf="/users/login">login</a>
+          href="/users/login">Login</a>
           <a class="btn ut-red" href="/users/new">Register</a>
+        <% } %>
       </div>
     </div>
   </div>

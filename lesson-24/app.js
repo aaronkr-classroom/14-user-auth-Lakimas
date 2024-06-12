@@ -82,7 +82,7 @@ router.use(passport.session());// passport가 Express.js 내 세션을 사용하
  */
 const User = require("./models/User"); // User 모델을 요청
 passport.use(User.createStrategy()); // User 모델의 인증 전략을 passport에 전달
-passport.serializeUser(user.serializeUser());// User 모델의 직렬화 메서드를 passport에 전달
+passport.serializeUser(User.serializeUser());// User 모델의 직렬화 메서드를 passport에 전달
 passport.deserializeUser(User.deserializeUser());// User 모델의 역직렬화 메서드를 passport에 전달
 
 /**
@@ -92,7 +92,6 @@ passport.deserializeUser(User.deserializeUser());// User 모델의 역직렬화 
 router.use((req, res, next) => {
   // 응답 객체상에서 플래시 메시지의 로컬 flashMessages로의 할당
   res.locals.flashMessages = req.flash(); // flash 메시지를 뷰에서 사용할 수 있도록 설정
-
   /**
    * @TODO: 
    * 
@@ -100,7 +99,7 @@ router.use((req, res, next) => {
    * 사용자 정의 미들웨어로 로컬 변수 추가
    */
   res.locals.loggedIn = req.isAuthenticated();
-  res.locals.
+  res.locals.currentUser = req.User;
   // 로그인 여부를 확인하는 불리언 값을 로컬 변수에 추가
   // 현재 사용자를 로컬 변수에 추가
   next();
