@@ -1,6 +1,7 @@
 // controllers/usersController.js
 "use strict";
 
+const { validate } = require("../models/Talk");
 /**
  * Listing 18.11 (p. 271)
  * userController.js에서 인덱스 액션 생성과 index 액션의 재방문
@@ -25,16 +26,56 @@ const getUserParams = (body) => {
 };
 
 module.exports = {
-  /**
-   * @TODO: login 액션
-   *
-   * Listing 23.3 (p. 336)
-   * userController.js로의 로그인과 인증 액션 추가
-   */
+  
+login: (req, res) => {
+  res.render("users/login", {
+  page: "login",
+  title: "Login"
+  });
+},
 
-  /**
-   * @TODO: authenticate 액션
-   */
+authenticate: (req, res, next) => {
+  User.findOne({
+      email: req.body.email
+    })
+  .then(user => {
+      if (user) {
+        user.passwordCompare(req.body.password)
+        .then(pwMatch => {
+          if (pwMatch) {
+            res.locals.redirect = `/users/${user._id}`;
+            req.flash(
+              "Succes",
+              "Login success!"
+            );
+          } else {
+            res.locals.redirect = "/users/login";
+            req.flash(
+              "error",
+              "Login failed: password not match"
+            );
+          }
+          next();
+        })
+        .catch(error => {
+          console.log(`Error logging in user: ${error.message}`);
+          next(error);
+          });
+      } else {
+        res.locals.redirect = "/users/login";
+          req.flash(
+            "error",
+            "Login failed: User not Found."
+          );
+          res.locals.redirect = "/users/login";
+          next();
+      }
+    })
+  .catch(error => {
+      console.log(`Error logging in user: ${error.message}`);
+      next(error);
+      });
+  },
 
   index: (req, res, next) => {
     User.find() // index 액션에서만 퀴리 실행
@@ -49,6 +90,7 @@ module.exports = {
         next(error); // 에러를 캐치하고 다음 미들웨어로 전달
       });
   },
+
   indexView: (req, res) => {
     res.render("users/index", {
       page: "users",
@@ -108,13 +150,29 @@ module.exports = {
         next(error);
       });
   },
+  validate: (req, res, next) => {
+    req
+    .sanitizeBody("email")
+    .normalizeEmail({
+      all_lowercase: true
+    })
+    .trim() //앞 뒤 띄어쓰기 삭제
+    .check("email", "email is invalid")
+    .isEmail();
 
-  /**
-   * @TODO: validate 액션
-   *
-   * Listing 23.7 (p. 346)
-   * userController.js에서 validate 액션 추가
-   */
+  req
+    .check("password", "password cannot ce empty")
+    .notEmpty();
+  req.getValidationResult()
+    .then(result => {
+      if (!result.isE,pty()) {
+        let messages = result.arry().map(m => m.msg);
+        req.flash("error",messages.join(" and "));
+        res.locals.redirect = "/users/new";
+      }
+      next();
+    })
+  },
 
   /**
    * [노트] 폼 데이터를 다시 채우기 위해 다양한 방법을 선택할 수 있다. (연구해보면)

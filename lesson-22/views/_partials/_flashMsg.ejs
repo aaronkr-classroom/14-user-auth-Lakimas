@@ -5,13 +5,13 @@
     layout.ejs에서 플래시 메시지 추가
 -->
 <div class="flash-msg">
-    <% if (flashMessages) { %>
+    <% if (flashMessages) { %><!-- flashMessages가 있는지 체크 -->
         <% if (flashMessages.success) { %>
-            <div class="alert alert-success flash success">
+            <div class="alert alert-success flash success"><!-- success 메시지 출력 -->
                 <%= flashMessages.success %>
             </div>
         <% } else if (flashMessages.error) { %>
-            <div class ="alert alert-danger flash error">
+            <div class="alert alert-danger flash error"><!-- error 메시지 출력 -->
                 <%= flashMessages.error %>
             </div>
         <% } %>

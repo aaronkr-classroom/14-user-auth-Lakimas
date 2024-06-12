@@ -89,13 +89,23 @@ userSchema.virtual("fullName").get(function () {
  */
 userSchema.pre("save", function (next) {
   let user = this; // 콜백에서 함수 키워드 사용
+    
+  bcrypt
+    .hash(user.password, 10)
+    .then(hash => {
+      user.password = hash;
+      next();
+    })
+    .catch(error => {
+      console.log(`Error hashing pw: ${error.message}`);
+      next(error);
+    });
+});
 
-  /**
-   * @TODO: bcrypt 해싱
-   *
-   * Listing 23.4 (p. 340)
-   * user.js에서의 pre 훅 해싱
-   */
+userSchema.methods.passwordComparison = function(inputPassword) { // 해싱된 패스워드와 비교하는 함수 추가
+    let user = this;
+    return bcrypt.compare(inputPassword, user.password); // 저장된 패스워드와의 비교
+};
 });
 
 userSchema.pre("save", function (next) {
@@ -128,6 +138,10 @@ userSchema.pre("save", function (next) {
  * Listing 23.4 (p. 340)
  * user.js에서의 pre 훅 해싱
  */
+userSchema.methods.passwordCompare = (inPW) => {
+  let user = this;
+  return bcrypt.compare(inputPassword, user.password);
+}
 
 module.exports = mongoose.model("User", userSchema);
 

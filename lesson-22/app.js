@@ -68,10 +68,6 @@ mongoose.connect(
   { useNewUrlParser: true }
 );
 
-const db = mongoose.connection;
-db.once("open", () => {
-  console.log("Successfully connect Mongoose!");
-});
 /**
  * =====================================================================
  * Define app settings and middleware

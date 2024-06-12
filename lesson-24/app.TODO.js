@@ -111,11 +111,12 @@ router.use((req, res, next) => {
  */
 
 // 애플리케이션에 Mongoose 설정
-const mongoose = require("mongoose"); // mongoose를 요청
+const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/ut-nodejs", {
-  useNewUrlParser: true,
-});
+mongoose.connect(
+  "mongodb+srv://ut-node:1234@ut-node.0oy3l1r.mongodb.net/?retryWrites=true&w=majority&appName=UT-Node", // altas경로
+  { useNewUrlParser: true }
+);
 
 /**
  * =====================================================================

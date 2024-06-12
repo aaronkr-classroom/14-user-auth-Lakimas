@@ -71,11 +71,12 @@ router.use((req, res, next) => {
  */
 
 // 애플리케이션에 Mongoose 설정
-const mongoose = require("mongoose"); // mongoose를 요청
+const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://127.0.0.1:27017/ut-nodejs", {
-  useNewUrlParser: true,
-});
+mongoose.connect(
+  "mongodb+srv://ut-node:1234@ut-node.0oy3l1r.mongodb.net/?retryWrites=true&w=majority&appName=UT-Node", // altas경로
+  { useNewUrlParser: true }
+);
 
 /**
  * =====================================================================
@@ -116,7 +117,11 @@ router.get("/transportation", pagesController.showTransportation); // 교통수�
  * Listing 23.2 (p. 335)
  * app.js로 로그인 라우트를 추가
  */
-
+router.get("/users/login", usersController.login);
+router.post("/users/login",
+  usersController.authenticate,
+  usersController.redirectView
+);
 /**
  * Users
  */
@@ -124,7 +129,6 @@ router.get("/users", usersController.index, usersController.indexView); // index
 router.get("/users/new", usersController.new); // 생성 폼을 보기 위한 요청 처리
 router.post(
   "/users/create",
-  usersController.validate, // Listing 23.6 (p. 344) - 사용자 생성 라우트에 유효성 체크 미들웨어 추가
   usersController.create,
   usersController.redirectView
 ); // 생성 폼에서 받아온 데이터의 처리와 결과를 사용자 보기 페이지에 보여주기
