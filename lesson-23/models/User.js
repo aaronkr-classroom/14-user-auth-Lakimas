@@ -75,8 +75,6 @@ userSchema.virtual("fullName").get(function () {
   return `${this.name.first} ${this.name.last}`;
 }); // 사용자의 풀 네임을 얻기 위한 가상 속성 추가
 
-// module.exports = mongoose.model("User", userSchema);
-
 /**
  * 노트: 이 책을 쓰는 시점에 Mongoose 메소드는 더 이상 의존하지 않는 어휘 this를
  * 사용하기 때문에 화살표 함수를 사용할 수 없다.
@@ -100,12 +98,6 @@ userSchema.pre("save", function (next) {
       console.log(`Error hashing pw: ${error.message}`);
       next(error);
     });
-});
-
-userSchema.methods.passwordComparison = function(inputPassword) { // 해싱된 패스워드와 비교하는 함수 추가
-    let user = this;
-    return bcrypt.compare(inputPassword, user.password); // 저장된 패스워드와의 비교
-};
 });
 
 userSchema.pre("save", function (next) {
@@ -138,13 +130,12 @@ userSchema.pre("save", function (next) {
  * Listing 23.4 (p. 340)
  * user.js에서의 pre 훅 해싱
  */
-userSchema.methods.passwordCompare = (inPW) => {
-  let user = this;
-  return bcrypt.compare(inputPassword, user.password);
-}
+userSchema.methods.passwordComparison = function(inputPassword) { // 해싱된 패스워드와 비교하는 함수 추가
+    let user = this;
+    return bcrypt.compare(inputPassword, user.password); // 저장된 패스워드와의 비교
+};
 
 module.exports = mongoose.model("User", userSchema);
-
 /**
  * 노트: 이 책을 쓰는 시점에는 Mongoose 훅에서 화살표 함수는 작동하지 않는다.
  */
