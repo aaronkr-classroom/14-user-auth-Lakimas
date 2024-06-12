@@ -1,4 +1,3 @@
-// models/User.js
 "use strict";
 
 // [노트] 이 라인은 사용자 모델의 등록 전에 위치해야 한다.
@@ -77,6 +76,9 @@ const mongoose = require("mongoose"),
  * passport-local-mongoose 플러그인을 사용자 스키마에 추가
  */
 // 이메일 주소를 사용자 이름으로 사용
+userSchema.plugin(passportLocalMongoose, {
+  usernameField: "email", // 'username' 대신 'email'을 사용자명 필드로 사용
+});
 
 /**
  * Listing 18.2 (p. 260)
@@ -122,7 +124,3 @@ userSchema.pre("save", function (next) {
 });
 
 module.exports = mongoose.model("User", userSchema);
-
-/**
- * 노트: 이 책을 쓰는 시점에는 Mongoose 훅에서 화살표 함수는 작동하지 않는다.
- */
