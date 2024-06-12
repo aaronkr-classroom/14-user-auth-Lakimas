@@ -54,7 +54,10 @@ router.use(connectFlash());
  * @TODO: Listing 22.2 (p. 327)
  * 응답상에서 connectFlash와 미들웨어와의 연계
  */
-
+router.use((req, res, next) => {
+  res.locals.flashMessages = req.flash();
+  next();
+});
 /**
  * =====================================================================
  * Define Mongoose and MongoDB connection
